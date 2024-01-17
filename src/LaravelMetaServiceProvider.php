@@ -17,7 +17,7 @@ class LaravelMetaServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->publishes([__DIR__.'/resources/views' => resource_path('views/vendor/laravel-meta')]);
+        $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/laravel-meta')]);
         $this->publishes([__DIR__.'/../lang' => $this->app->langPath('vendor/laravel-meta')]);
 
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laravel-meta');

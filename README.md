@@ -1,29 +1,31 @@
-# Laravel Publishable
+# Laravel Meta
 
-[![Novius CI](https://github.com/novius/laravel-publishable/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/novius/laravel-publishable/actions/workflows/main.yml)
+[![Novius CI](https://github.com/novius/laravel-meta/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/novius/laravel-meta/actions/workflows/main.yml)
 [![Packagist Release](https://img.shields.io/packagist/v/novius/laravel-nova-publishable.svg?maxAge=1800&style=flat-square)](https://packagist.org/packages/novius/laravel-nova-publishable)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
 
 ## Introduction
 
-A package for making Laravel Eloquent models "publishable" using 4 states : draft, published, unpublished and scheduled.
-Manage an additional `published_first_at` date for order by and display.
+A package to manage meta fields on Laravel Eloquent models.
 
 ## Requirements
 
-* Laravel 8.0, 9.0 or 10.0
+* Laravel 10.0
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require novius/laravel-publishable
+composer require novius/laravel-meta
 ```
+
+Optionally you can also: 
 
 ```bash
 php artisan vendor:publish --provider="Novius\Publishable\LaravelPublishableServiceProvider" --tag=lang
+php artisan vendor:publish --provider="Novius\Publishable\LaravelPublishableServiceProvider" --tag=views
 ```
 
 ## Usage
@@ -36,7 +38,7 @@ Schema::create('posts', function (Blueprint $table) {
     $table->string('title');
     $table->text('text');
     $table->timestamps();
-    $table->publishable(); // Macro provided by the package
+    $table->addMeta(); // Macro provided by the package
 });
 ```
 
@@ -46,31 +48,94 @@ Schema::create('posts', function (Blueprint $table) {
 namespace App\Models;
 
 use \Illuminate\Database\Eloquent\Model;
-use \Novius\LaravelMeta\Publishable;
+use Novius\LaravelMeta\Traits\HasMeta;
 
 class Post extends Model {
-    use Publishable;
+    use HasMeta;
     ...
 }
 ```
 
-#### Extensions
+You can also add this method which will define the default operation of the trait 
 
-The extensions shipped with this trait include; `notPublished`, `published`, `onlyDrafted`, `onlyExpired`, `onlyWillBePublished` and can be used accordingly:
+```php
+
+    public function hasMetaConfig(): ModelConfig
+    {
+        if (! isset($this->hasMetaConfig)) {
+            $this->hasMetaConfig = new ModelConfig(
+                IndexFollow::index_follow, // The default value of the seo_robots field if not defined 
+                'title', // The name of field for the default value of the seo_title and og_title fields if not defined. Can also be a callable, see below
+                function($model) { // The default value of the seo_description and og_description fields if not defined. Can also be a string, see above
+                    return $model->description;                
+                }
+            );
+        }
+
+        return $this->hasMetaConfig;
+    }
+```
+
+#### Extensions
 
 ```php
 $post = Post::first();
-$post->isPublished();
+$post->canBeIndexedByRobots();
+$post->seo_robots;
+$post->seo_title;
+$post->seo_description;
+$post->seo_keywords;
+$post->og_title;
+$post->og_description;
+$post->og_image;
 
-$postsPublished = Post::all();
-$postsPublished = Post::query()->published();
-$onlyNotPublishedPosts = Post::query()->notPublished();
-$onlyDraftedPosts = Post::query()->onlyDrafted();
-$onlyExpiredPosts = Post::query()->onlyExpired();
-$onlyWillBePublishedPosts = Post::query()->onlyWillBePublished();
+$postsIndexableByRobots = Post::query()->indexableByRobots();
+$postsNotIndexableByRobots = Post::query()->notIndexableByRobots();
 ```
 
-When not specifing any additional scopes, all not published models are excluded from the query by default to prevent leaks of not published data.
+#### Nova
+
+If you use Laravel Nova, you can do that on your Resource on a Model using HasMeta :
+
+```php
+<?php
+
+use Novius\LaravelMeta\Traits\NovaResourceHasMeta;
+
+class HasMetaModel extends Resource
+{
+    use NovaResourceHasMeta;
+
+    /**
+     * Get the fields displayed by the resource.
+     *
+     * @return array
+     */
+    public function fields(NovaRequest $request)
+    {
+        return [
+            ID::make()->sortable(),
+
+            new Panel('Model', [
+                Text::make('Title', 'title'),
+                Textarea::make('Description', 'description'),
+            ]),
+            new Panel('Meta', $this->getSEONovaFields([
+                'seo_keywords' => false, // This will not display field for seo_keywords 
+                'required' => [
+                    'seo_robots' => true, // This will set required for field seo_robots
+                ],
+            ])),
+        ];
+    }
+}
+
+```
+
+#### Front
+
+
+
 
 ### Testing
 
