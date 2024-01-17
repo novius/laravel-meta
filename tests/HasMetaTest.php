@@ -45,4 +45,14 @@ class HasMetaTest extends TestCase
         $model->save();
         $this->assertFalse($model->canBeIndexedByRobots());
     }
+
+    /** @test */
+    public function accessor_fallbacks()
+    {
+        $model = HasMetaModel::factory()->create();
+        $this->assertEquals($model->title, $model->seo_title);
+        $this->assertEquals($model->title, $model->og_title);
+        $this->assertEquals($model->description, $model->seo_description);
+        $this->assertEquals($model->description, $model->og_description);
+    }
 }

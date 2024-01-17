@@ -47,6 +47,9 @@ trait NovaResourceHasMeta
             Textarea::make(trans('laravel-meta::messages.seo_description'), $columnMeta.'.seo_description')
                 ->rules('nullable', 'string')
                 ->hideFromIndex(),
+            Textarea::make(trans('laravel-meta::messages.seo_keywords'), $columnMeta.'.seo_keywords')
+                ->rules('nullable', 'string')
+                ->hideFromIndex(),
             Select::make(trans('laravel-meta::messages.seo_robots'), $columnMeta.'.seo_robots')
                 ->rules('required')
                 ->options(array_combine($options, $options))
