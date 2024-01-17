@@ -63,7 +63,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Novius\\LaravelMeta\\LaravelPublishableServiceProvider"
+                "Novius\\LaravelMeta\\LaravelMetaServiceProvider"
             ]
         }
     }
