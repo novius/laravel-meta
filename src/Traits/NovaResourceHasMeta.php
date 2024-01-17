@@ -23,7 +23,7 @@ trait NovaResourceHasMeta
         }
         $columnMeta = $model->getMetaColumn();
 
-        $options = array_keys(IndexFollow::cases());
+        $options = Arr::pluck(IndexFollow::cases(), 'name', 'value');
 
         /** @var resource $this */
         $fields = [];
