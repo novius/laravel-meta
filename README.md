@@ -134,8 +134,37 @@ class HasMetaModel extends Resource
 
 #### Front
 
+You can use de Facade ModelHasMeta to display the meta of a model.
 
+In your controller :
 
+```php
+class HasModelController extends Controller
+{
+    public function show($id)
+    {
+        $model = HasMetaModel::find($id);
+        ModelHasMeta::setModel($model);
+
+        return view('has-meta', compact('model'));
+    }
+}
+```
+
+In the view :
+
+```php
+@section('metas')
+    {{ \Novius\LaravelMeta\Facades\ModelHasMeta::renderMeta() }}
+@endsection
+
+<x-main-layout>
+    <div class="container mx-auto px-4 md:px-0">
+        <h1>{{ $model->title }}</h1>
+        <p>{{ $model->description }}</p>
+    </div>
+</x-main-layout>
+```
 
 ### Testing
 
