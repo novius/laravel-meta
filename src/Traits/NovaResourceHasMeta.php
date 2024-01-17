@@ -45,38 +45,38 @@ trait NovaResourceHasMeta
             ])->onlyOnIndex();
         }
         if (Arr::get($config, 'seo_title', true)) {
-            $fields[] = Text::make(trans('laravel-meta::messages.seo_title'), $columnMeta.'.seo_title')
+            $fields[] = Text::make(trans('laravel-meta::messages.seo_title'), $columnMeta.'->seo_title')
                 ->rules(Arr::get($config, 'required.seo_title', false) ? 'required' : 'nullable', 'string')
                 ->hideFromIndex();
         }
         if (Arr::get($config, 'seo_description', true)) {
-            $fields[] = Textarea::make(trans('laravel-meta::messages.seo_description'), $columnMeta.'.seo_description')
+            $fields[] = Textarea::make(trans('laravel-meta::messages.seo_description'), $columnMeta.'->seo_description')
                 ->rules(Arr::get($config, 'required.seo_description', false) ? 'required' : 'nullable', 'string')
                 ->hideFromIndex();
         }
         if (Arr::get($config, 'seo_keywords', true)) {
-            $fields[] = Textarea::make(trans('laravel-meta::messages.seo_keywords'), $columnMeta.'.seo_keywords')
+            $fields[] = Textarea::make(trans('laravel-meta::messages.seo_keywords'), $columnMeta.'->seo_keywords')
                 ->rules(Arr::get($config, 'required.seo_keywords', false) ? 'required' : 'nullable', 'string')
                 ->hideFromIndex();
         }
         if (Arr::get($config, 'seo_robots', true)) {
-            $fields[] = Select::make(trans('laravel-meta::messages.seo_robots'), $columnMeta.'.seo_robots')
+            $fields[] = Select::make(trans('laravel-meta::messages.seo_robots'), $columnMeta.'->seo_robots')
                 ->rules(Arr::get($config, 'required.seo_robots', false) ? 'required' : 'nullable')
                 ->options(array_combine($options, $options))
                 ->hideFromIndex();
         }
         if (Arr::get($config, 'og_title', true)) {
-            $fields[] = Text::make(trans('laravel-meta::messages.og_title'), $columnMeta.'.og_title')
+            $fields[] = Text::make(trans('laravel-meta::messages.og_title'), $columnMeta.'->og_title')
                 ->rules(Arr::get($config, 'required.og_title', false) ? 'required' : 'nullable', 'string')
                 ->hideFromIndex();
         }
         if (Arr::get($config, 'og_description', true)) {
-            $fields[] = Text::make(trans('laravel-meta::messages.og_description'), $columnMeta.'.og_description')
+            $fields[] = Text::make(trans('laravel-meta::messages.og_description'), $columnMeta.'->og_description')
                 ->rules(Arr::get($config, 'required.og_description', false) ? 'required' : 'nullable', 'string')
                 ->hideFromIndex();
         }
         if (Arr::get($config, 'og_image', true)) {
-            $fields[] = Image::make(trans('laravel-meta::messages.og_image'), $columnMeta.'.og_image')
+            $fields[] = Image::make(trans('laravel-meta::messages.og_image'), $columnMeta.'->og_image')
                 ->hideFromIndex();
         }
 
