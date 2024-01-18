@@ -1,7 +1,7 @@
 # Laravel Meta
 
 [![Novius CI](https://github.com/novius/laravel-meta/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/novius/laravel-meta/actions/workflows/main.yml)
-[![Packagist Release](https://img.shields.io/packagist/v/novius/laravel-nova-publishable.svg?maxAge=1800&style=flat-square)](https://packagist.org/packages/novius/laravel-nova-publishable)
+[![Packagist Release](https://img.shields.io/packagist/v/novius/laravel-meta.svg?maxAge=1800&style=flat-square)](https://packagist.org/packages/novius/laravel-meta)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
 
@@ -24,8 +24,8 @@ composer require novius/laravel-meta
 Optionally you can also: 
 
 ```bash
-php artisan vendor:publish --provider="Novius\Publishable\LaravelPublishableServiceProvider" --tag=lang
-php artisan vendor:publish --provider="Novius\Publishable\LaravelPublishableServiceProvider" --tag=views
+php artisan vendor:publish --provider="Novius\LaravelMeta\LaravelMetaServiceProvider" --tag=lang
+php artisan vendor:publish --provider="Novius\LaravelMeta\LaravelMetaServiceProvider" --tag=views
 ```
 
 ## Usage
@@ -86,18 +86,20 @@ You can also add this method which will define the default operation of the trai
 #### Extensions
 
 ```php
-$post = Post::first();
-$post->canBeIndexedByRobots();
-$post->seo_robots;
-$post->seo_title;
-$post->seo_description;
-$post->seo_keywords;
-$post->og_title;
-$post->og_description;
-$post->og_image;
+$model = ModelHasMeta::first();
+$model->canBeIndexedByRobots();
+$model->seo_robots
+$model->seo_title
+$model->seo_description
+$model->seo_keywords
+$model->og_type
+$model->og_title
+$model->og_description
+$model->og_image
+$model->og_image_url
 
-$postsIndexableByRobots = Post::query()->indexableByRobots();
-$postsNotIndexableByRobots = Post::query()->notIndexableByRobots();
+$indexableByRobots = Post::query()->indexableByRobots();
+$notIndexableByRobots = Post::query()->notIndexableByRobots();
 ```
 
 #### Nova
@@ -140,17 +142,19 @@ class HasMetaModel extends Resource
 
 #### Front
 
-You can use de Facade ModelHasMeta to display the meta of a model.
+You can use de Facade CurrentModel to display the meta of a model.
 
 In your controller :
 
 ```php
+use Novius\LaravelMeta\Facades\CurrentModel;
+
 class HasModelController extends Controller
 {
     public function show($id)
     {
         $model = HasMetaModel::find($id);
-        ModelHasMeta::setModel($model);
+        CurrentModel::setModel($model);
 
         return view('has-meta', compact('model'));
     }
@@ -161,7 +165,7 @@ In the view :
 
 ```php
 @section('metas')
-    {{ \Novius\LaravelMeta\Facades\CurrentModel::renderMeta() }}
+    @include('laravel-meta::meta')
 @endsection
 
 <x-main-layout>
