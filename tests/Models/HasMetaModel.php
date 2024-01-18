@@ -22,7 +22,10 @@ class HasMetaModel extends Model
     public function hasMetaConfig(): ModelConfig
     {
         if (! isset($this->hasMetaConfig)) {
-            $this->hasMetaConfig = new ModelConfig(IndexFollow::index_follow, 'title', 'description');
+            $this->hasMetaConfig = ModelConfig::make()
+                ->setDefaultSeoRobots(IndexFollow::index_follow)
+                ->setFallbackTitle('title')
+                ->setFallbackDescription('description');
         }
 
         return $this->hasMetaConfig;

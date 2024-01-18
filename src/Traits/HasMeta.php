@@ -6,16 +6,19 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Arr;
 use Novius\LaravelMeta\Enums\IndexFollow;
+use Novius\LaravelMeta\Enums\OgType;
 use Novius\LaravelMeta\ModelConfig;
 
 /**
- * @property string|null $seo_robots
- * @property string|null $seo_title
- * @property string|null $seo_description
- * @property string|null $seo_keywords
- * @property string|null $og_title
- * @property string|null $og_description
- * @property string|null $og_image
+ * @property-read string|null $seo_robots
+ * @property-read string|null $seo_title
+ * @property-read string|null $seo_description
+ * @property-read string|null $seo_keywords
+ * @property-read string|null $og_type
+ * @property-read string|null $og_title
+ * @property-read string|null $og_description
+ * @property-read string|null $og_image
+ * @property-read string|null $og_image_url
  *
  * @method static static|Builder|\Illuminate\Database\Query\Builder indexableByRobots()
  * @method static static|Builder|\Illuminate\Database\Query\Builder notIndexableByRobots()
@@ -34,7 +37,7 @@ trait HasMeta
     public function hasMetaConfig(): ModelConfig
     {
         if (! isset($this->hasMetaConfig)) {
-            $this->hasMetaConfig = new ModelConfig();
+            $this->hasMetaConfig = ModelConfig::make();
         }
 
         return $this->hasMetaConfig;
@@ -56,7 +59,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->hasMetaConfig()->defaultSeoRobot))?->value;
+                return IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->hasMetaConfig()->defaultSeoRobots))?->value;
             }
         );
     }
@@ -88,6 +91,15 @@ trait HasMeta
         );
     }
 
+    protected function ogType(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type', $this->hasMetaConfig()->defaultOgType))?->value;
+            }
+        );
+    }
+
     protected function ogTitle(): Attribute
     {
         return Attribute::make(
@@ -110,17 +122,26 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_image');
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_image', $this->fallbackMeta($this->hasMetaConfig()->fallbackImage));
+            }
+        );
+    }
+
+    protected function ogImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->fallbackMeta($this->hasMetaConfig()->getOgImageUrl);
             }
         );
     }
 
     public function canBeIndexedByRobots(): bool
     {
-        $seo_robots = IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->hasMetaConfig()->defaultSeoRobot));
+        $seo_robots = IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->hasMetaConfig()->defaultSeoRobots));
 
         if ($seo_robots === null) {
-            $seo_robots = $this->hasMetaConfig()->defaultSeoRobot;
+            $seo_robots = $this->hasMetaConfig()->defaultSeoRobots;
         }
 
         return in_array($seo_robots, [
@@ -152,7 +173,7 @@ trait HasMeta
             IndexFollow::index_nofollow->value,
         ];
         $builder->whereIn($this->getQualifiedMetaColumn().'->seo_robots', $indexables);
-        $default = $this->hasMetaConfig()->defaultSeoRobot;
+        $default = $this->hasMetaConfig()->defaultSeoRobots;
         if (in_array($default->value, $indexables, true)) {
             $builder->orWhereNull($this->getQualifiedMetaColumn().'->seo_robots');
         }
@@ -165,7 +186,7 @@ trait HasMeta
             IndexFollow::noindex_nofollow->value,
         ];
         $builder->whereIn($this->getQualifiedMetaColumn().'->seo_robots', $notIndexables);
-        $default = $this->hasMetaConfig()->defaultSeoRobot;
+        $default = $this->hasMetaConfig()->defaultSeoRobots;
         if (in_array($default->value, $notIndexables, true)) {
             $builder->orWhereNull($this->getQualifiedMetaColumn().'->seo_robots');
         }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Novius\LaravelMeta\Traits\HasMeta;
 
-class ModelHasMetaService
+class CurrentModelService
 {
     public ?Model $model;
 

@@ -3,15 +3,16 @@
 namespace Novius\LaravelMeta;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Novius\LaravelMeta\Services\ModelHasMetaService;
+use Novius\LaravelMeta\Services\CurrentModelService;
 
 class LaravelMetaServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton(ModelHasMetaService::class, function () {
-            return new ModelHasMetaService();
+        $this->app->singleton(CurrentModelService::class, function () {
+            return new CurrentModelService();
         });
     }
 
@@ -24,13 +25,30 @@ class LaravelMetaServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'laravel-meta');
 
         $this->configureMacros();
+        $this->configureComponents();
     }
 
-    protected function configureMacros()
+    protected function configureMacros(): void
     {
 
         Blueprint::macro('addMeta', function ($column = 'meta') {
             $this->json($column)->nullable();
         });
+    }
+
+    protected function configureComponents(): void
+    {
+        Blade::component('laravel-meta::components.description', 'meta-description');
+        Blade::component('laravel-meta::components.keywords', 'meta-keywords');
+        Blade::component('laravel-meta::components.og_description', 'meta-og-description');
+        Blade::component('laravel-meta::components.og_image', 'meta-og-image');
+        Blade::component('laravel-meta::components.og_title', 'meta-og_title');
+        Blade::component('laravel-meta::components.og_site_name', 'meta-og-site-name');
+        Blade::component('laravel-meta::components.og_type', 'meta-og-type');
+        Blade::component('laravel-meta::components.og_url', 'meta-og-url');
+        Blade::component('laravel-meta::components.og_locale', 'meta-og-locale');
+        Blade::component('laravel-meta::components.robots', 'meta-robots');
+        Blade::component('laravel-meta::components.title', 'meta-title');
+        Blade::component('laravel-meta::components.x_card', 'meta-x-card');
     }
 }

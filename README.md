@@ -63,13 +63,20 @@ You can also add this method which will define the default operation of the trai
     public function hasMetaConfig(): ModelConfig
     {
         if (! isset($this->hasMetaConfig)) {
-            $this->hasMetaConfig = new ModelConfig(
-                IndexFollow::index_follow, // The default value of the seo_robots field if not defined 
-                'title', // The name of field for the default value of the seo_title and og_title fields if not defined. Can also be a callable, see below
-                function($model) { // The default value of the seo_description and og_description fields if not defined. Can also be a string, see above
+            $this->hasMetaConfig = ModelConfig::make()
+                ->setDefaultSeoRobots(IndexFollow::index_follow) // The default value of the seo_robots field if not defined
+                ->setFallbackTitle('title') // The name of field for the default value of the seo_title and og_title fields if not defined. Can also be a callable, see below
+                ->setFallbackDescription(function($model) { // The default value of the seo_description and og_description fields if not defined. Can also be a string, see above
                     return $model->description;                
-                }
-            );
+                })
+                ->setFallbackImage('picture')
+                ->setCallbackOgImageUrl(function($model) { // The function to get the og_image url
+                    if ($model->og_image) {
+                        return asset('storage/'.$model->og_image);
+                    }
+        
+                    return null;
+                });
         }
 
         return $this->hasMetaConfig;
@@ -121,10 +128,9 @@ class HasMetaModel extends Resource
                 Textarea::make('Description', 'description'),
             ]),
             new Panel('Meta', $this->getSEONovaFields([
-                'seo_keywords' => false, // This will not display field for seo_keywords 
-                'required' => [
-                    'seo_robots' => true, // This will set required for field seo_robots
-                ],
+                'seo_keywords' => null, // This will not display field for seo_keywords 
+                'og_image' => AlternativeImageField::make(trans('laravel-meta::messages.og_image'), $columnMeta.'->og_image')
+                    ->hideFromIndex(),
             ])),
         ];
     }
@@ -155,7 +161,7 @@ In the view :
 
 ```php
 @section('metas')
-    {{ \Novius\LaravelMeta\Facades\ModelHasMeta::renderMeta() }}
+    {{ \Novius\LaravelMeta\Facades\CurrentModel::renderMeta() }}
 @endsection
 
 <x-main-layout>
