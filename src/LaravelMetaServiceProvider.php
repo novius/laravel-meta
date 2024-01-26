@@ -42,7 +42,7 @@ class LaravelMetaServiceProvider extends ServiceProvider
         Blade::component('laravel-meta::components.keywords', 'meta-keywords');
         Blade::component('laravel-meta::components.og_description', 'meta-og-description');
         Blade::component('laravel-meta::components.og_image', 'meta-og-image');
-        Blade::component('laravel-meta::components.og_title', 'meta-og_title');
+        Blade::component('laravel-meta::components.og_title', 'meta-og-title');
         Blade::component('laravel-meta::components.og_site_name', 'meta-og-site-name');
         Blade::component('laravel-meta::components.og_type', 'meta-og-type');
         Blade::component('laravel-meta::components.og_url', 'meta-og-url');
