@@ -12,7 +12,7 @@ class LaravelMetaServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(CurrentModelService::class, function () {
-            return new CurrentModelService();
+            return new CurrentModelService;
         });
     }
 

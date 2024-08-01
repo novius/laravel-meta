@@ -83,6 +83,6 @@ class ModelConfig
 
     public static function make()
     {
-        return new static();
+        return new static;
     }
 }
