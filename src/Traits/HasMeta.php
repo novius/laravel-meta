@@ -95,7 +95,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type', $this->getMetaConfig()->defaultOgType))?->value;
+                return OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type', $this->getMetaConfig()->defaultOgType->value));
             }
         );
     }
