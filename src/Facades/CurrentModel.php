@@ -12,7 +12,7 @@ use Novius\LaravelMeta\Services\CurrentModelService;
  */
 class CurrentModel extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return CurrentModelService::class;
     }

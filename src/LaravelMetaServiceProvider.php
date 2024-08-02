@@ -9,14 +9,14 @@ use Novius\LaravelMeta\Services\CurrentModelService;
 
 class LaravelMetaServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(CurrentModelService::class, function () {
             return new CurrentModelService;
         });
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/laravel-meta')]);
         $this->publishes([__DIR__.'/../lang' => $this->app->langPath('vendor/laravel-meta')]);

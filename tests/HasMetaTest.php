@@ -10,7 +10,7 @@ class HasMetaTest extends TestCase
     /* --- HasMeta Tests --- */
 
     /** @test */
-    public function all_models_can_be_found_with_scopes()
+    public function all_models_can_be_found_with_scopes(): void
     {
         HasMetaModel::factory()->indexFollow()->create();
         HasMetaModel::factory()->indexNoFollow()->create();
@@ -24,7 +24,7 @@ class HasMetaTest extends TestCase
     }
 
     /** @test */
-    public function accessor_canBeIndexedByRobots()
+    public function accessor_canBeIndexedByRobots(): void
     {
         $model = HasMetaModel::factory()->indexFollow()->create();
         $this->assertTrue($model->canBeIndexedByRobots());
@@ -47,7 +47,7 @@ class HasMetaTest extends TestCase
     }
 
     /** @test */
-    public function accessor_fallbacks()
+    public function accessor_fallbacks(): void
     {
         $model = HasMetaModel::factory()->create();
         $this->assertEquals($model->title, $model->seo_title);

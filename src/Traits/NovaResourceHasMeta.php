@@ -4,6 +4,7 @@ namespace Novius\LaravelMeta\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
@@ -14,19 +15,20 @@ use Novius\LaravelMeta\Enums\IndexFollow;
 
 trait NovaResourceHasMeta
 {
-    public function getSEONovaFields(array $fields = []): array
+    public function getSEONovaFields(array $fields = []): Collection
     {
         /** @var Model&HasMeta $model */
         $model = static::newModel();
         if (! in_array(HasMeta::class, class_uses_recursive($model), true)) {
-            return [];
+            return collect();
         }
         $columnMeta = $model->getMetaColumn();
+        $metaConfig = $model->getMetaConfig();
 
         $options = Arr::pluck(IndexFollow::cases(), 'value', 'value');
 
         /** @var resource $this */
-        return array_filter(array_merge([
+        return collect([
             'badge' => Badge::make(trans('laravel-meta::messages.badge'), function () {
                 /** @var resource $this */
                 if ($this->resource->seo_title && $this->resource->seo_description) {
@@ -62,7 +64,12 @@ trait NovaResourceHasMeta
                 ->rules('nullable', 'string')
                 ->hideFromIndex(),
             'og_image' => Image::make(trans('laravel-meta::messages.og_image'), $columnMeta.'->og_image')
+                ->disk($metaConfig->ogImageDisk)
+                ->path($metaConfig->ogImagePath)
+                ->prunable()
                 ->hideFromIndex(),
-        ], $fields));
+        ])
+            ->concat($fields)
+            ->filter();
     }
 }

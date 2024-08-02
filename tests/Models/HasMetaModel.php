@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Novius\LaravelMeta\Enums\IndexFollow;
-use Novius\LaravelMeta\ModelConfig;
+use Novius\LaravelMeta\MetaModelConfig;
 use Novius\LaravelMeta\Traits\HasMeta;
 
 class HasMetaModel extends Model
@@ -19,15 +19,15 @@ class HasMetaModel extends Model
 
     protected $guarded = [];
 
-    public function hasMetaConfig(): ModelConfig
+    public function getMetaConfig(): MetaModelConfig
     {
-        if (! isset($this->hasMetaConfig)) {
-            $this->hasMetaConfig = ModelConfig::make()
+        if (! isset($this->metaConfig)) {
+            $this->metaConfig = MetaModelConfig::make()
                 ->setDefaultSeoRobots(IndexFollow::index_follow)
                 ->setFallbackTitle('title')
                 ->setFallbackDescription('description');
         }
 
-        return $this->hasMetaConfig;
+        return $this->metaConfig;
     }
 }

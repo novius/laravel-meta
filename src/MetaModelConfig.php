@@ -7,23 +7,27 @@ use Novius\LaravelMeta\Enums\IndexFollow;
 use Novius\LaravelMeta\Enums\OgType;
 use Novius\LaravelMeta\Traits\HasMeta;
 
-class ModelConfig
+class MetaModelConfig
 {
     public IndexFollow $defaultSeoRobots;
 
     public OgType $defaultOgType;
 
     /** @var callable|string|null */
-    public $fallbackTitle = null;
+    public $fallbackTitle;
 
     /** @var callable|string|null */
-    public $fallbackDescription = null;
+    public $fallbackDescription;
 
     /** @var callable|string|null */
-    public $fallbackImage = null;
+    public $fallbackImage;
 
     /** @var callable */
     public $getOgImageUrl;
+
+    public string $ogImageDisk = 'public';
+
+    public string $ogImagePath = '/';
 
     public function __construct()
     {
@@ -81,7 +85,21 @@ class ModelConfig
         return $this;
     }
 
-    public static function make()
+    public function setOgImageDisk(string $disk): static
+    {
+        $this->ogImageDisk = $disk;
+
+        return $this;
+    }
+
+    public function setOgImagePath(string $path): static
+    {
+        $this->ogImagePath = $path;
+
+        return $this;
+    }
+
+    public static function make(): static
     {
         return new static;
     }

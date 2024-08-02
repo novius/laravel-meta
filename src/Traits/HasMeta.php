@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Arr;
 use Novius\LaravelMeta\Enums\IndexFollow;
 use Novius\LaravelMeta\Enums\OgType;
-use Novius\LaravelMeta\ModelConfig;
+use Novius\LaravelMeta\MetaModelConfig;
 
 /**
  * @property-read string|null $seo_robots
@@ -32,15 +32,15 @@ trait HasMeta
         }
     }
 
-    protected ModelConfig $hasMetaConfig;
+    protected MetaModelConfig $metaConfig;
 
-    public function hasMetaConfig(): ModelConfig
+    public function getMetaConfig(): MetaModelConfig
     {
-        if (! isset($this->hasMetaConfig)) {
-            $this->hasMetaConfig = ModelConfig::make();
+        if (! isset($this->metaConfig)) {
+            $this->metaConfig = MetaModelConfig::make();
         }
 
-        return $this->hasMetaConfig;
+        return $this->metaConfig;
     }
 
     protected function fallbackMeta($fallback)
@@ -59,7 +59,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->hasMetaConfig()->defaultSeoRobots))?->value;
+                return IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->getMetaConfig()->defaultSeoRobots))?->value;
             }
         );
     }
@@ -68,7 +68,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'seo_title', $this->fallbackMeta($this->hasMetaConfig()->fallbackTitle));
+                return Arr::get($this->{$this->getMetaColumn()}, 'seo_title', $this->fallbackMeta($this->getMetaConfig()->fallbackTitle));
             }
         );
     }
@@ -77,7 +77,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'seo_description', $this->fallbackMeta($this->hasMetaConfig()->fallbackDescription));
+                return Arr::get($this->{$this->getMetaColumn()}, 'seo_description', $this->fallbackMeta($this->getMetaConfig()->fallbackDescription));
             }
         );
     }
@@ -95,7 +95,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type', $this->hasMetaConfig()->defaultOgType))?->value;
+                return OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type', $this->getMetaConfig()->defaultOgType))?->value;
             }
         );
     }
@@ -104,7 +104,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_title', $this->fallbackMeta($this->hasMetaConfig()->fallbackTitle));
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_title', $this->fallbackMeta($this->getMetaConfig()->fallbackTitle));
             }
         );
     }
@@ -113,7 +113,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_description', $this->fallbackMeta($this->hasMetaConfig()->fallbackDescription));
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_description', $this->fallbackMeta($this->getMetaConfig()->fallbackDescription));
             }
         );
     }
@@ -122,7 +122,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_image', $this->fallbackMeta($this->hasMetaConfig()->fallbackImage));
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_image', $this->fallbackMeta($this->getMetaConfig()->fallbackImage));
             }
         );
     }
@@ -131,17 +131,17 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return $this->fallbackMeta($this->hasMetaConfig()->getOgImageUrl);
+                return $this->fallbackMeta($this->getMetaConfig()->getOgImageUrl);
             }
         );
     }
 
     public function canBeIndexedByRobots(): bool
     {
-        $seo_robots = IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->hasMetaConfig()->defaultSeoRobots));
+        $seo_robots = IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->getMetaConfig()->defaultSeoRobots));
 
         if ($seo_robots === null) {
-            $seo_robots = $this->hasMetaConfig()->defaultSeoRobots;
+            $seo_robots = $this->getMetaConfig()->defaultSeoRobots;
         }
 
         return in_array($seo_robots, [
@@ -155,7 +155,7 @@ trait HasMeta
      */
     public function getMetaColumn(): string
     {
-        return defined('static::META') ? static::META : 'meta';
+        return defined(__CLASS__.'::META') ? constant(__CLASS__.'::META') : 'meta';
     }
 
     /**
@@ -173,7 +173,7 @@ trait HasMeta
             IndexFollow::index_nofollow->value,
         ];
         $builder->whereIn($this->getQualifiedMetaColumn().'->seo_robots', $indexables);
-        $default = $this->hasMetaConfig()->defaultSeoRobots;
+        $default = $this->getMetaConfig()->defaultSeoRobots;
         if (in_array($default->value, $indexables, true)) {
             $builder->orWhereNull($this->getQualifiedMetaColumn().'->seo_robots');
         }
@@ -186,7 +186,7 @@ trait HasMeta
             IndexFollow::noindex_nofollow->value,
         ];
         $builder->whereIn($this->getQualifiedMetaColumn().'->seo_robots', $notIndexables);
-        $default = $this->hasMetaConfig()->defaultSeoRobots;
+        $default = $this->getMetaConfig()->defaultSeoRobots;
         if (in_array($default->value, $notIndexables, true)) {
             $builder->orWhereNull($this->getQualifiedMetaColumn().'->seo_robots');
         }

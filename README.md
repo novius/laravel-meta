@@ -61,10 +61,10 @@ You can also add this method which will define the default operation of the trai
 
 ```php
 
-    public function hasMetaConfig(): ModelConfig
+    public function getMetaConfig(): MetaModelConfig
     {
-        if (! isset($this->hasMetaConfig)) {
-            $this->hasMetaConfig = ModelConfig::make()
+        if (! isset($this->metaConfig)) {
+            $this->metaConfig = MetaModelConfig::make()
                 ->setDefaultSeoRobots(IndexFollow::index_follow) // The default value of the seo_robots field if not defined
                 ->setFallbackTitle('title') // The name of field for the default value of the seo_title and og_title fields if not defined. Can also be a callable, see below
                 ->setFallbackDescription(function($model) { // The default value of the seo_description and og_description fields if not defined. Can also be a string, see above
@@ -77,10 +77,12 @@ You can also add this method which will define the default operation of the trai
                     }
         
                     return null;
-                });
+                })
+                ->setOgImageDisk('a_disk')
+                ->setOgImagePath('/og-image/');
         }
 
-        return $this->hasMetaConfig;
+        return $this->metaConfig;
     }
 ```
 
@@ -134,7 +136,7 @@ class HasMetaModel extends Resource
                 'seo_keywords' => null, // This will not display field for seo_keywords 
                 'og_image' => AlternativeImageField::make(trans('laravel-meta::messages.og_image'), $columnMeta.'->og_image')
                     ->hideFromIndex(),
-            ])),
+            ])->toArray()),
         ];
     }
 }

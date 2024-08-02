@@ -10,9 +10,9 @@ class HasMetaModelFactory extends Factory
 {
     protected $model = HasMetaModel::class;
 
-    public function indexFollow()
+    public function indexFollow(): HasMetaModelFactory
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'meta' => [
                     'seo_robots' => IndexFollow::index_follow,
@@ -21,9 +21,9 @@ class HasMetaModelFactory extends Factory
         });
     }
 
-    public function indexNoFollow()
+    public function indexNoFollow(): HasMetaModelFactory
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'meta' => [
                     'seo_robots' => IndexFollow::index_nofollow,
@@ -32,9 +32,9 @@ class HasMetaModelFactory extends Factory
         });
     }
 
-    public function noIndexFollow()
+    public function noIndexFollow(): HasMetaModelFactory
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'meta' => [
                     'seo_robots' => IndexFollow::noindex_follow,
@@ -43,9 +43,9 @@ class HasMetaModelFactory extends Factory
         });
     }
 
-    public function noIndexNoFollow()
+    public function noIndexNoFollow(): HasMetaModelFactory
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function () {
             return [
                 'meta' => [
                     'seo_robots' => IndexFollow::noindex_nofollow,
@@ -54,7 +54,7 @@ class HasMetaModelFactory extends Factory
         });
     }
 
-    public function definition()
+    public function definition(): array
     {
         return [
             'title' => fake()->title(),
