@@ -59,7 +59,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->getMetaConfig()->defaultSeoRobots))?->value;
+                return (IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots')) ?? $this->getMetaConfig()->defaultSeoRobots)->value;
             }
         );
     }
@@ -68,7 +68,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'seo_title', $this->fallbackMeta($this->getMetaConfig()->fallbackTitle));
+                return Arr::get($this->{$this->getMetaColumn()}, 'seo_title') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackTitle);
             }
         );
     }
@@ -77,7 +77,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'seo_description', $this->fallbackMeta($this->getMetaConfig()->fallbackDescription));
+                return Arr::get($this->{$this->getMetaColumn()}, 'seo_description') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackDescription);
             }
         );
     }
@@ -95,7 +95,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type', $this->getMetaConfig()->defaultOgType->value));
+                return (OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type')) ?? $this->getMetaConfig()->defaultOgType)->value;
             }
         );
     }
@@ -104,7 +104,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_title', $this->fallbackMeta($this->getMetaConfig()->fallbackTitle));
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_title') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackTitle);
             }
         );
     }
@@ -113,7 +113,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_description', $this->fallbackMeta($this->getMetaConfig()->fallbackDescription));
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_description') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackDescription);
             }
         );
     }
@@ -122,7 +122,7 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return Arr::get($this->{$this->getMetaColumn()}, 'og_image', $this->fallbackMeta($this->getMetaConfig()->fallbackImage));
+                return Arr::get($this->{$this->getMetaColumn()}, 'og_image') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackImage);
             }
         );
     }
@@ -131,6 +131,10 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
+                if ($this->og_image) {
+                    return asset('storage/'.$this->og_image);
+                }
+
                 return $this->fallbackMeta($this->getMetaConfig()->getOgImageUrl);
             }
         );
