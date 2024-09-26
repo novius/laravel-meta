@@ -10,7 +10,7 @@ use Novius\LaravelMeta\Traits\HasMeta;
 
 class CurrentModelService
 {
-    public ?Model $model;
+    public ?Model $model = null;
 
     public function setModel(Model $model): void
     {

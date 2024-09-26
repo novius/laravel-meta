@@ -1,7 +1,7 @@
 @php
 /** @var \Illuminate\Database\Eloquent\Model&\Novius\LaravelMeta\Traits\HasMeta|null $model */
 $model = \Novius\LaravelMeta\Facades\CurrentModel::getModel();
-if (!in_array(\Novius\LaravelMeta\Traits\HasMeta::class, class_uses_recursive($model), true)) {
+if ($model === null || !in_array(\Novius\LaravelMeta\Traits\HasMeta::class, class_uses_recursive($model), true)) {
     $model = null;
 }
 @endphp
