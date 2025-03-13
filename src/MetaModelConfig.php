@@ -7,6 +7,7 @@ use Novius\LaravelMeta\Enums\IndexFollow;
 use Novius\LaravelMeta\Enums\OgType;
 use Novius\LaravelMeta\Traits\HasMeta;
 
+/** @phpstan-consistent-constructor */
 class MetaModelConfig
 {
     public IndexFollow $defaultSeoRobots;

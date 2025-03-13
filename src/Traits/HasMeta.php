@@ -22,6 +22,8 @@ use Novius\LaravelMeta\MetaModelConfig;
  *
  * @method static static|Builder|\Illuminate\Database\Query\Builder indexableByRobots()
  * @method static static|Builder|\Illuminate\Database\Query\Builder notIndexableByRobots()
+ *
+ * @phpstan-ignore trait.unused
  */
 trait HasMeta
 {

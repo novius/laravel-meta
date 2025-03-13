@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
 use Novius\LaravelMeta\Enums\IndexFollow;
 
+/** @phpstan-ignore trait.unused */
 trait NovaResourceHasMeta
 {
     public function getSEONovaFields(array $fields = []): Collection
