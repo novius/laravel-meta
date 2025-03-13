@@ -110,6 +110,7 @@ jobs:
         exclude:
           - laravel: 12.*
             nova: 4.*
+          - laravel: 10.*
 
     name: phpstan - P${{ matrix.php-versions }} - L${{ matrix.laravel }} - N${{ matrix.nova }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
