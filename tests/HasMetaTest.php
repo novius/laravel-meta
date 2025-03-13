@@ -24,7 +24,7 @@ class HasMetaTest extends TestCase
     }
 
     /** @test */
-    public function accessor_canBeIndexedByRobots(): void
+    public function accessor_can_be_indexed_by_robots(): void
     {
         $model = HasMetaModel::factory()->indexFollow()->create();
         $this->assertTrue($model->canBeIndexedByRobots());
