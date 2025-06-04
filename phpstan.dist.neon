@@ -14,3 +14,4 @@ parameters:
 
     ignoreErrors:
         - identifier: varTag.unresolvableType
+        - identifier: trait.unused

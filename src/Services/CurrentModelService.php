@@ -29,7 +29,6 @@ class CurrentModelService
             if (in_array(HasMeta::class, class_uses_recursive($model), true)) {
                 /** @var Model&HasMeta $model */
 
-                /** @phpstan-ignore argument.type */
                 return view('laravel-meta::meta', [
                     'robots' => $model->seo_robots,
                     'title' => $model->seo_title,
