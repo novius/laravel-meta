@@ -143,6 +143,32 @@ class HasMetaModel extends Resource
 
 ```
 
+#### Filament
+
+If you use Filament, you can do that on your Resource on a Model using HasMeta :
+
+```php
+<?php
+
+use Novius\LaravelMeta\Traits\FilamentResourceHasMeta;
+
+
+class HasMetaModel extends Resource
+{
+    use FilamentResourceHasMeta;
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                ...static::getFormSEOFields(),
+            ]);
+    }
+}
+
+```
+
+
 #### Front
 
 You can use de Facade CurrentModel to display the meta of a model.
