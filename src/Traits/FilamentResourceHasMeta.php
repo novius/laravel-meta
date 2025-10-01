@@ -50,7 +50,7 @@ trait FilamentResourceHasMeta
         /** @var Model&HasMeta $model */
         $model = new $modelClass;
         if (! in_array(HasMeta::class, class_uses_recursive($model), true)) {
-            return collect();
+            return [];
         }
         $columnMeta = $model->getMetaColumn();
         $metaConfig = $model->getMetaConfig();
