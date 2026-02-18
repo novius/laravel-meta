@@ -114,17 +114,11 @@ jobs:
           - laravel: 11.*
             testbench: 9.*
             carbon: 2.*
-          - laravel: 10.*
-            testbench: 8.*
-            carbon: 2.*
         exclude:
           - php-versions: 8.*
             laravel: 12.*
             nova: 4.*
-          - php-versions: '8.5'
-            laravel: 12.*
-            nova: 4.*
-          - php-versions: '8.5'
+          - php-versions: 8.5
             laravel: 11.*
             nova: 4.*
 
