@@ -102,7 +102,7 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest']
         php-versions: ['8.2', '8.3', '8.4', '8.5']
-        laravel: [ 11.*, 12.* ]
+        laravel: [ 10.*, 11.*, 12.* ]
         nova: [ 4.*, 5.* ]
         dependency-version: [ prefer-stable ]
         include:
