@@ -121,6 +121,7 @@ jobs:
           - laravel: 12.*
             nova: 4.*
           - php-versions: '8.5'
+            laravel: 10.*
             nova: 4.*
 
     name: phpstan - P${{ matrix.php-versions }} - L${{ matrix.laravel }} - N${{ matrix.nova }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
