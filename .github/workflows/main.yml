@@ -63,6 +63,7 @@ jobs:
             nova: 4.*
           - php-versions: '8.5'
             laravel: 10.*
+          - php-versions: '8.5'
             nova: 4.*
 
     name: test - P${{ matrix.php-versions }} - L${{ matrix.laravel }} - N${{ matrix.nova }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
