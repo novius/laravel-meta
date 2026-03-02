@@ -86,39 +86,21 @@ You can also add this method which will define the default operation of the trai
     }
 ```
 
-#### Getters & Setters
+#### Extensions
 
 ```php
 $model = ModelHasMeta::first();
-
-// Getters
 $model->canBeIndexedByRobots();
-$model->seo_robots;
-$model->seo_title;
-$model->seo_description;
-$model->seo_keywords;
-$model->og_type;
-$model->og_title;
-$model->og_description;
-$model->og_image;
-$model->og_image_url;
+$model->seo_robots
+$model->seo_title
+$model->seo_description
+$model->seo_keywords
+$model->og_type
+$model->og_title
+$model->og_description
+$model->og_image
+$model->og_image_url
 
-// Setters
-$model->seo_title = 'New SEO Title';
-$model->seo_description = 'New SEO Description';
-$model->seo_keywords = 'keyword1, keyword2';
-$model->seo_robots = \Novius\LaravelMeta\Enums\IndexFollow::noindex_nofollow; // Accept string or Enum
-$model->og_title = 'New OG Title';
-$model->og_description = 'New OG Description';
-$model->og_image = 'path/to/image.png';
-$model->og_type = \Novius\LaravelMeta\Enums\OgType::article; // Accept string or Enum
-
-$model->save();
-```
-
-#### Scopes
-
-```php
 $indexableByRobots = Post::query()->indexableByRobots();
 $notIndexableByRobots = Post::query()->notIndexableByRobots();
 ```
