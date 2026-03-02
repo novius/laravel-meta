@@ -2,6 +2,7 @@
 
 namespace Novius\LaravelMeta\Traits;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Arr;
@@ -10,14 +11,14 @@ use Novius\LaravelMeta\Enums\OgType;
 use Novius\LaravelMeta\MetaModelConfig;
 
 /**
- * @property-read string|null $seo_robots
- * @property-read string|null $seo_title
- * @property-read string|null $seo_description
- * @property-read string|null $seo_keywords
- * @property-read string|null $og_type
- * @property-read string|null $og_title
- * @property-read string|null $og_description
- * @property-read string|null $og_image
+ * @property string|null $seo_robots
+ * @property string|null $seo_title
+ * @property string|null $seo_description
+ * @property string|null $seo_keywords
+ * @property string|null $og_type
+ * @property string|null $og_title
+ * @property string|null $og_description
+ * @property string|null $og_image
  * @property-read string|null $og_image_url
  *
  * @method static static|Builder|\Illuminate\Database\Query\Builder indexableByRobots()
@@ -57,39 +58,71 @@ trait HasMeta
         return $this->getAttribute($fallback);
     }
 
+    protected function metaSetter(string $key): Closure
+    {
+        return function ($value) use ($key) {
+            $metaColumn = $this->getMetaColumn();
+            $meta = $this->getAttributeFromArray($metaColumn) ?? [];
+            if (is_string($meta)) {
+                $meta = json_decode($meta, true) ?? [];
+            }
+            $meta[$key] = $value;
+
+            return [
+                $metaColumn => json_encode($meta),
+            ];
+        };
+    }
+
     protected function seoRobots(): Attribute
     {
         return Attribute::make(
             get: function () {
                 return (IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots')) ?? $this->getMetaConfig()->defaultSeoRobots)->value;
+            },
+            set: function ($value) {
+                $value = $value instanceof IndexFollow ? $value : IndexFollow::tryFrom($value);
+
+                $setter = $this->metaSetter('seo_robots');
+
+                return $setter($value);
             }
         );
     }
 
     protected function seoTitle(): Attribute
     {
+        $setter = $this->metaSetter('seo_title');
+
         return Attribute::make(
             get: function () {
                 return Arr::get($this->{$this->getMetaColumn()}, 'seo_title') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackTitle);
-            }
+            },
+            set: $setter
         );
     }
 
     protected function seoDescription(): Attribute
     {
+        $setter = $this->metaSetter('seo_description');
+
         return Attribute::make(
             get: function () {
                 return Arr::get($this->{$this->getMetaColumn()}, 'seo_description') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackDescription);
-            }
+            },
+            set: $setter
         );
     }
 
     protected function seoKeywords(): Attribute
     {
+        $setter = $this->metaSetter('seo_keywords');
+
         return Attribute::make(
             get: function () {
                 return Arr::get($this->{$this->getMetaColumn()}, 'seo_keywords');
-            }
+            },
+            set: $setter
         );
     }
 
@@ -98,34 +131,50 @@ trait HasMeta
         return Attribute::make(
             get: function () {
                 return (OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type')) ?? $this->getMetaConfig()->defaultOgType)->value;
+            },
+            set: function ($value) {
+                $value = $value instanceof OgType ? $value : OgType::tryFrom($value);
+
+                $setter = $this->metaSetter('og_type');
+
+                return $setter($value);
             }
         );
     }
 
     protected function ogTitle(): Attribute
     {
+        $setter = $this->metaSetter('og_title');
+
         return Attribute::make(
             get: function () {
                 return Arr::get($this->{$this->getMetaColumn()}, 'og_title') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackTitle);
-            }
+            },
+            set: $setter
         );
     }
 
     protected function ogDescription(): Attribute
     {
+        $setter = $this->metaSetter('og_description');
+
         return Attribute::make(
             get: function () {
                 return Arr::get($this->{$this->getMetaColumn()}, 'og_description') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackDescription);
-            }
+            },
+            set: $setter
         );
     }
 
     protected function ogImage(): Attribute
     {
+        $setter = $this->metaSetter('og_image');
+
         return Attribute::make(
             get: function () {
                 return Arr::get($this->{$this->getMetaColumn()}, 'og_image') ?? $this->fallbackMeta($this->getMetaConfig()->fallbackImage);
-            }
+            },
+            set: $setter
         );
     }
 
