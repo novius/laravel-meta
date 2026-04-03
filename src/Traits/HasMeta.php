@@ -61,7 +61,9 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return (IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots')) ?? $this->getMetaConfig()->defaultSeoRobots)->value;
+                $value = Arr::get($this->{$this->getMetaColumn()}, 'seo_robots');
+
+                return (IndexFollow::tryFrom($value ?? '') ?? $this->getMetaConfig()->defaultSeoRobots)->value;
             }
         );
     }
@@ -97,7 +99,9 @@ trait HasMeta
     {
         return Attribute::make(
             get: function () {
-                return (OgType::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'og_type')) ?? $this->getMetaConfig()->defaultOgType)->value;
+                $value = Arr::get($this->{$this->getMetaColumn()}, 'og_type');
+
+                return (OgType::tryFrom($value ?? '') ?? $this->getMetaConfig()->defaultOgType)->value;
             }
         );
     }
@@ -144,7 +148,8 @@ trait HasMeta
 
     public function canBeIndexedByRobots(): bool
     {
-        $seo_robots = IndexFollow::tryFrom(Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->getMetaConfig()->defaultSeoRobots));
+        $value = Arr::get($this->{$this->getMetaColumn()}, 'seo_robots', $this->getMetaConfig()->defaultSeoRobots);
+        $seo_robots = IndexFollow::tryFrom($value instanceof IndexFollow ? $value->value : ($value ?? ''));
 
         if ($seo_robots === null) {
             $seo_robots = $this->getMetaConfig()->defaultSeoRobots;
