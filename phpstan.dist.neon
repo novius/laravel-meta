@@ -13,5 +13,7 @@ parameters:
     editorUrlTitle: '%%file%%:%%line%%'
 
     ignoreErrors:
-        - identifier: varTag.unresolvableType
-        - identifier: trait.unused
+        -
+            identifier: varTag.unresolvableType
+        -
+            identifier: trait.unused
