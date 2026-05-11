@@ -12,7 +12,7 @@ A package to manage meta fields on Laravel Eloquent models.
 ## Requirements
 
 * PHP >= 8.2
-* Laravel 10.0
+* Laravel >= 10.0
 
 ## Installation
 
