@@ -120,7 +120,9 @@ jobs:
         exclude:
           - laravel: 13.*
             php-versions: '8.2'
-          - laravel: [ 12.*, 13.* ]
+          - laravel: 12.*
+            nova: 4.*
+          - laravel: 13.*
             nova: 4.*
           - php-versions: '8.5'
             nova: 4.*
